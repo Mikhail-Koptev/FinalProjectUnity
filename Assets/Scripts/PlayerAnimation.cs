@@ -19,7 +19,7 @@ public class PlayerAnimation : MonoBehaviour
         _animator.SetFloat("speed", _rb.velocity.magnitude);
 
         //attack
-        /*if (gameObject.GetComponent<PlayerController>()._isAttack)
-            _animator.SetTrigger("attack");*/
+        if (gameObject.GetComponent<PlayerController>()._isAttack)
+            _animator.SetTrigger("attack");
     }
 }
