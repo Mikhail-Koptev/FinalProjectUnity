@@ -47,7 +47,7 @@ public class PlayerMove : MonoBehaviour
         
         if(!_isGround)
         {
-            _movement.y -= _gravityScale * Time.fixedDeltaTime;
+            _movement.y -= _gravityScale * Time.deltaTime;
             _rb.velocity = _movement;
         }
 

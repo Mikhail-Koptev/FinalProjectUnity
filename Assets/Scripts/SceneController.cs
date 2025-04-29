@@ -6,10 +6,22 @@ using UnityEngine.SceneManagement;
 public class SceneController : MonoBehaviour
 {
     [SerializeField] private Image FadePanel;
+    [SerializeField] private Transform _camera;
+    [SerializeField] private float cameraLeft;
+    [SerializeField] private float cameraRight;
 
     private void Start()
     {
         StartCoroutine(FadeOut());
+    }
+
+    private void Update()
+    {
+        if (_camera.position.x < cameraLeft)
+            _camera.position = new Vector3(cameraLeft, _camera.position.y, _camera.position.z);
+        
+        if (_camera.position.x > cameraRight)
+            _camera.position = new Vector3(cameraRight, _camera.position.y, _camera.position.z);
     }
 
     public void ChangeScene()
