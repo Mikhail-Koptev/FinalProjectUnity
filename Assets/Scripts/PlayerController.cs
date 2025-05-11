@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float hp = 100.0f;
+    [SerializeField] private float health = 100.0f;
     [SerializeField] private float attackDelay = 1;
 
     public bool _isAttack;
@@ -10,11 +10,27 @@ public class PlayerController : MonoBehaviour
     private float time;
 
     private UIController UIController;
+    [SerializeField] private GameObject endPanel;
+
+    private GameObject sceneController;
+
+    private PlayerMove playerMove;
+
+    private Database database;
 
     private void Start()
     {
         UIController = GameObject.Find("UIController").GetComponent<UIController>();
+        playerMove = gameObject.GetComponent<PlayerMove>();
         _isAttack = false;
+
+        sceneController = GameObject.Find("SceneController");
+        database = GameObject.Find("Database").GetComponent<Database>();
+
+        if (database.GetHealth() != 0) {
+            health = database.GetHealth();
+            UIController.SetHP(health);
+        }
     }
 
     private void Update()
@@ -26,7 +42,7 @@ public class PlayerController : MonoBehaviour
 
         if (time >= attackDelay)
         {
-            if (Input.GetKeyDown(KeyCode.F))
+            if (Input.GetKeyDown(KeyCode.F) && !playerMove._isDamaged)
             {
                 _isAttack = true;
                 time = 0;
@@ -34,14 +50,17 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (hp <= 0)
+        if (health <= 0) {
+            EndGame();
             Destroy(gameObject);
+        }
     }
 
     public void GetDamage(float damage)
     {
-        hp -= damage;
-        UIController.SetHP(hp);
+        health -= damage;
+        UIController.SetHP(health);
+        gameObject.GetComponent<PlayerMove>().GetDamage();
     }
 
     public void GiveDamage()
@@ -56,6 +75,31 @@ public class PlayerController : MonoBehaviour
                     enemyController.GetDamage(Random.Range(5, 10));
                 }
             }
+
+            else if (target.tag == "Scarecrow")
+                target.GetComponent<Scarecrow>().Kill();
+        }
+    }
+
+    public void Heal(float hp)
+    {
+        if ( (health + hp) < 100.0f) {
+            health += hp;
+            UIController.SetHP(health);
+        }
+    }
+
+    private void EndGame()
+    {
+        endPanel.gameObject.GetComponent<EndPanelController>().EndGame();
+    }
+
+    // Change scene
+    private void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.tag == "ChangeScene") {
+            database.SetHealth(health);
+            sceneController.GetComponent<SceneController>().ChangeScene();
         }
     }
 }

@@ -8,27 +8,25 @@ public class PlayerMove : MonoBehaviour
 
     private Rigidbody2D _rb;
     public bool _isGround;
+    public bool _isDamaged;
     private Vector3 _movement;
-
-    private GameObject sceneController;
 
     void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
         _movement = Vector3.zero;
         _isGround = true;
-
-        sceneController = GameObject.Find("SceneController");
+        _isDamaged = false;
     }
 
     void Update()
     {
-        if (Input.GetKey(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.RightArrow) && !_isDamaged)
         {
             _movement.x = _speed;
             transform.rotation = Quaternion.Euler(0, 0, 0);
         }
-        else if (Input.GetKey(KeyCode.LeftArrow))
+        else if (Input.GetKey(KeyCode.LeftArrow) && !_isDamaged)
         {
             _movement.x = -_speed;
             transform.rotation = Quaternion.Euler(0, 180, 0);
@@ -38,19 +36,24 @@ public class PlayerMove : MonoBehaviour
             _movement.x = 0;
         }
 
-        if(Input.GetKeyDown(KeyCode.UpArrow) && _isGround)
+        if (Input.GetKeyDown(KeyCode.UpArrow) && _isGround)
         {
             _isGround = false;
             _movement.y = _jumpForce;
             _rb.velocity = _movement;
         }
         
-        if(!_isGround)
+        if (!_isGround)
         {
             _movement.y -= _gravityScale * Time.deltaTime;
             _rb.velocity = _movement;
         }
 
+        if (_isGround)
+        {
+            if (_isDamaged == true)
+                _isDamaged = false;
+        }
 
         _movement.y = _rb.velocity.y;
         _rb.velocity = _movement;
@@ -72,10 +75,11 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    // Change scene
-    private void OnTriggerEnter2D(Collider2D collider)
+    public void GetDamage()
     {
-        if (collider.tag == "ChangeScene")
-            sceneController.GetComponent<SceneController>().ChangeScene();
+        _isDamaged = true;
+        _isGround = false;
+        _movement.y = _jumpForce;
+        _rb.velocity = _movement;
     }
 }

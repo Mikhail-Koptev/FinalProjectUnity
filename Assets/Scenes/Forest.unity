@@ -284,6 +284,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &124798239 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2004686137357202261, guid: 33ccca2dff18cd44cacf8619548deccb, type: 3}
+  m_PrefabInstance: {fileID: 4857464860883449895}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &197795559 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1401699292188540062, guid: 33ccca2dff18cd44cacf8619548deccb, type: 3}
@@ -295,6 +300,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &308102637
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 308102639}
+  - component: {fileID: 308102638}
+  m_Layer: 0
+  m_Name: Database
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &308102638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 308102637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98d96707eb2bbf348acc348523e1a9f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 0
+--- !u!4 &308102639
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 308102637}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -8399,6 +8449,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HeroKnight
       objectReference: {fileID: 0}
+    - target: {fileID: 5046342630748129024, guid: eeef31eff694de748a0718043af75791, type: 3}
+      propertyPath: endPanel
+      value: 
+      objectReference: {fileID: 124798239}
     - target: {fileID: 7920306152576620682, guid: eeef31eff694de748a0718043af75791, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.6413132
@@ -8455,3 +8509,4 @@ SceneRoots:
   - {fileID: 5854332027426358657}
   - {fileID: 46716145}
   - {fileID: 4857464860883449895}
+  - {fileID: 308102639}
