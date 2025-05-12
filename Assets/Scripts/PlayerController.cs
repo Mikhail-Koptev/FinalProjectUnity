@@ -70,12 +70,11 @@ public class PlayerController : MonoBehaviour
         foreach (Collider2D target in targets)
         {
             if (target.tag == "Enemy") {
-                if (target.TryGetComponent<PlayerController>(out PlayerController enemyController))
-                {
-                    enemyController.GetDamage(Random.Range(5, 10));
-                }
+                EnemyAI enemy = target.GetComponent<EnemyAI>();
+                enemy.Hit(Random.Range(5, 10), gameObject);
             }
 
+            // Scarecrow collision handler
             else if (target.tag == "Scarecrow")
                 target.GetComponent<Scarecrow>().Kill();
         }
