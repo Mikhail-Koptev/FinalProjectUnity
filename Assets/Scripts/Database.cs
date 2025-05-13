@@ -4,7 +4,8 @@ public class Database : MonoBehaviour
 {
     private static Database instance;
 
-    public float health;
+    private float health;
+    private bool isWizardDefeated = false;
 
     private void Awake()
     {
@@ -18,13 +19,23 @@ public class Database : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    public float GetHealth()
+    {
+        return Database.instance.health;
+    }
+
     public void SetHealth(float hp)
     {
         Database.instance.health = hp;
     }
 
-    public float GetHealth()
+    public void SetWizardDefeated(bool value)
     {
-        return Database.instance.health;
+        Database.instance.isWizardDefeated = value;
+    }
+
+    public bool GetWizardDefeated()
+    {
+        return Database.instance.isWizardDefeated;
     }
 }

@@ -36,7 +36,7 @@ public class SceneController : MonoBehaviour
             float a = FadePanel.color.a;
             FadePanel.color = new Color(FadePanel.color.r, FadePanel.color.g, FadePanel.color.b, a += 0.01f);
 
-            yield return new WaitForSeconds(0.001f);
+            yield return new WaitForSeconds(0.01f);
         }
     }
 
@@ -47,7 +47,7 @@ public class SceneController : MonoBehaviour
             float a = FadePanel.color.a;
             FadePanel.color = new Color(FadePanel.color.r, FadePanel.color.g, FadePanel.color.b, a += 0.01f);
 
-            yield return new WaitForSeconds(0.001f);
+            yield return new WaitForSeconds(0.01f);
         }
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
@@ -60,7 +60,7 @@ public class SceneController : MonoBehaviour
             float a = FadePanel.color.a;
             FadePanel.color = new Color(FadePanel.color.r, FadePanel.color.g, FadePanel.color.b, a -= 0.01f);
 
-            yield return new WaitForSeconds(0.001f);
+            yield return new WaitForSeconds(0.01f);
         }
     }
 }

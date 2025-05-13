@@ -8,6 +8,7 @@ TagManager:
   - ChangeScene
   - Scarecrow
   - Enemy
+  - Grave
   layers:
   - Default
   - TransparentFX

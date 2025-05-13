@@ -50,8 +50,6 @@ public class EnemyAI : MonoBehaviour
         switch (currentState)
         {
             case (int) States.Idle:
-                //transform.rotation = Quaternion.Euler(0, 0, 0);
-
                 if (animator.GetBool("idle") == false) {
                     animator.SetBool("idle", true);
                 }
@@ -252,44 +250,6 @@ public class EnemyAI : MonoBehaviour
             currentState = (int) States.LookingForPlayer;
             idleTimer = 0f;
         }
-    }
-
-    /*private void Attack()
-    {
-        if (targetPlayer) {
-            speed = 0f;
-
-            // Turn left
-            if (targetPlayer.transform.position.x < transform.position.x) {
-                transform.rotation = Quaternion.Euler(0, 0f, 0);
-            }
-
-            // Turn right
-            else if (targetPlayer.transform.position.x > transform.position.x) {
-                transform.rotation = Quaternion.Euler(0, 180f, 0);
-            }
-
-            animator.SetTrigger("attack1");
-
-            float damage = Random.Range(2.5f, 6.5f);
-            targetPlayer.GetComponent<PlayerController>().Hit(damage);
-
-            if (!animator.GetCurrentAnimatorStateInfo(0).IsName("attack1")) {
-                speed = __speed;
-                currentState = (int) States.Idle;
-                attackTimer = 0f;
-            }
-        }
-        else {
-            currentState = (int) States.LookingForPlayer;
-            idleTimer = 0f;
-        }
-    }*/
-
-    private void ResetTimers()
-    {
-        idleTimer = 0f;
-        attackTimer = 0f;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

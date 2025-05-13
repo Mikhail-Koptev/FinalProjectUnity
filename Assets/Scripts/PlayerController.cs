@@ -77,8 +77,13 @@ public class PlayerController : MonoBehaviour
             }
 
             // Scarecrow collision handler
-            else if (target.tag == "Scarecrow")
+            else if (target.tag == "Scarecrow") {
                 target.GetComponent<Scarecrow>().Kill();
+            }
+            
+            // Grave collision handler
+            else if (target.tag == "Grave")
+                target.GetComponent<Grave>().Kill();
         }
     }
 
