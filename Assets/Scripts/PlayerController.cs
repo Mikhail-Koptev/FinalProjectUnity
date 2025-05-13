@@ -56,8 +56,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void GetDamage(float damage)
+    // Hit player function
+    public void Hit(float damage)
     {
+        Debug.Log(damage);
         health -= damage;
         UIController.SetHP(health);
         gameObject.GetComponent<PlayerMove>().GetDamage();

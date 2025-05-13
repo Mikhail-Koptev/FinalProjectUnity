@@ -18,7 +18,7 @@ public class Scarecrow : MonoBehaviour
     {
         if (collider.gameObject.tag == "Player") {
             if (!isPlayerDamaged) {
-                collider.gameObject.GetComponent<PlayerController>().GetDamage(20f);
+                collider.gameObject.GetComponent<PlayerController>().Hit(20f);
                 isPlayerDamaged = true;
             }
         }

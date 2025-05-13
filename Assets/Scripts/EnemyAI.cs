@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
@@ -7,17 +6,23 @@ public class EnemyAI : MonoBehaviour
         Idle,
         LookingForPlayer,
         WalkingToPlayer,
-        WalkingFromPlayer
+        WalkingFromPlayer,
+        Attack
     }
 
     private int currentState;
 
-    private float timer;
+    private float idleTimer, attackTimer, walkingTimer;
 
     private float y;
 
     [SerializeField] private float health;
     [SerializeField] private float speed;
+    [SerializeField] private float idleDelay;
+    [SerializeField] private float attackDelay;
+    [SerializeField] private float walkingDelay;
+
+    private float __speed;
 
     private Animator animator;
 
@@ -25,26 +30,63 @@ public class EnemyAI : MonoBehaviour
 
     void Start()
     {
+        __speed = speed;
+
         currentState = (int) States.Idle;
-        //animator.SetTrigger("idle");
-        timer = 0f;
+        idleTimer = 0f;
+        attackTimer = attackDelay;
 
         animator = GetComponent<Animator>();
     }
 
     void Update()
     {
-        timer += Time.deltaTime;
+        idleTimer += Time.deltaTime;
+        attackTimer += Time.deltaTime;
+        walkingTimer += Time.deltaTime;
+
+        Debug.Log(attackTimer);
 
         switch (currentState)
         {
             case (int) States.Idle:
+                //transform.rotation = Quaternion.Euler(0, 0, 0);
+
                 if (animator.GetBool("idle") == false) {
                     animator.SetBool("idle", true);
                 }
-                if (timer >= 5.0f) {
-                    currentState = (int) States.LookingForPlayer;
-                    timer = 0f;
+
+                if (!targetPlayer) {
+                    if (idleTimer >= idleDelay) {
+                        currentState = (int) States.LookingForPlayer;
+                        idleTimer = 0f;
+                    }
+                }
+                else {
+                    if (Vector3.Distance(targetPlayer.transform.position, transform.position) > 4) {
+                        if (attackTimer >= attackDelay) {
+                            currentState = (int) States.Attack;
+                            attackTimer = 0f;
+                        }
+                        else {
+                            currentState = (int) States.WalkingFromPlayer;
+                            idleTimer = 0f;
+                        }
+                    }
+
+                    if (attackTimer >= attackDelay) {
+                        currentState = (int) States.Attack;
+                        idleTimer = 0f;
+                    }
+                    else {
+                        currentState = (int) States.WalkingFromPlayer;
+                        idleTimer = 0f;
+                    }
+
+                    if (idleTimer >= idleDelay) {
+                        currentState = (int) States.WalkingToPlayer;
+                        idleTimer = 0f;
+                    }
                 }
                 break;
             
@@ -55,7 +97,7 @@ public class EnemyAI : MonoBehaviour
                 if (FindPlayer()) {
                     currentState = (int) States.WalkingToPlayer;
                     animator.SetBool("idle", false);
-                    timer = 0f;
+                    idleTimer = 0f;
                 }
                 break;
             
@@ -63,34 +105,79 @@ public class EnemyAI : MonoBehaviour
                 if (targetPlayer) {
                     var direction = (targetPlayer.transform.position - transform.position).normalized;
                     direction.y = y + 1f;
-                    if (Math.Abs(Vector3.Distance(targetPlayer.transform.position, transform.position)) > 2) {
 
-                        transform.position += direction * speed * Time.deltaTime;
+                    if (targetPlayer.transform.position.x > transform.position.x) {
+                        if (Vector3.Distance(targetPlayer.transform.position, transform.position) > 4) {
+                            transform.rotation = Quaternion.Euler(0, 180f, 0);
+                            transform.position += direction * speed * Time.deltaTime;
+                        }
+                        else {
+                            currentState = (int) States.Attack;
+                            idleTimer = 0f;
+                        }
+                    }
+                    else if (targetPlayer.transform.position.x < transform.position.x) {
+                        if (Vector3.Distance(targetPlayer.transform.position, transform.position) > 4) {
+                            transform.rotation = Quaternion.Euler(0, 0, 0);
+                            transform.position += direction * speed * Time.deltaTime;
+                        }
+                        else {
+                            currentState = (int) States.Attack;
+                            idleTimer = 0f;
+                        }
                     }
                 }
                 else {
                     currentState = (int) States.LookingForPlayer;
-                    //animator.SetBool("idle", true);
-                    timer = 0f;
+                    idleTimer = 0f;
                 }
                 break;
             
             case (int) States.WalkingFromPlayer:
                 if (targetPlayer) {
-                    var direction = -(targetPlayer.transform.position - transform.position).normalized;
-                    direction.y = y + 1f;
-                    if (Math.Abs(Vector3.Distance(targetPlayer.transform.position, transform.position)) < 5) {
-                        transform.rotation = Quaternion.Euler(0, 180f, 0);
-                        transform.position += direction * (speed-1f) * Time.deltaTime;
+                    if (walkingTimer <= walkingDelay) {
+                        var direction = -(targetPlayer.transform.position - transform.position).normalized;
+                        direction.y = y + 1f;
+
+                        if (targetPlayer.transform.position.x > transform.position.x) {
+                            if (Vector3.Distance(targetPlayer.transform.position, transform.position) < 5) {
+                                transform.rotation = Quaternion.Euler(0, 0, 0);
+                                transform.position += direction * (speed-1f) * Time.deltaTime;
+                            }
+                            else {
+                                transform.rotation = Quaternion.Euler(0, 180f, 0);
+                                currentState = (int) States.Idle;
+                                idleTimer = 0f;
+                            }
+                        }
+                        else if (targetPlayer.transform.position.x < transform.position.x) {
+                            if (Vector3.Distance(targetPlayer.transform.position, transform.position) < 5) {
+                                transform.rotation = Quaternion.Euler(0, 180f, 0);
+                                transform.position += direction * (speed-1f) * Time.deltaTime;
+                            }
+                            else {
+                                transform.rotation = Quaternion.Euler(0, 0, 0);
+                                currentState = (int) States.Idle;
+                                idleTimer = 0f;
+                            }
+                        }
                     }
                     else {
-                        transform.rotation = Quaternion.Euler(0, 0, 0);
-                        currentState = (int) States.Idle;
-                        //animator.SetBool("idle", true);
-                        timer = 0f;
+                        currentState = (int) States.Attack;
+                        walkingTimer = 0f;
                     }
                 }
                 break;
+            
+            case (int) States.Attack:
+                if (attackTimer >= attackDelay) {
+                    Attack();
+                }
+                break;
+        }
+
+        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("attack2") || !animator.GetCurrentAnimatorStateInfo(0).IsName("attack1")) {
+            speed = __speed;
         }
 
         if (health <= 0)
@@ -112,26 +199,97 @@ public class EnemyAI : MonoBehaviour
         return false;
     }
 
-    private void HitPlayer(PlayerController playerController)
-    {
-        playerController.GetDamage(20f);
-        currentState = (int) States.WalkingFromPlayer;
-        animator.SetBool("idle", false);
-        timer = 0f;
-    }
-
+    // Hit enemy function
     public void Hit(float hp, GameObject? player)
     {
         health -= hp;
         if (player) targetPlayer = player;
         currentState = (int) States.WalkingFromPlayer;
-        animator.SetBool("idle", false);
-        timer = 0f;
+        idleTimer = 0f;
     }
 
     private void Attack()
     {
+        if (targetPlayer) {
+            speed = 0f;
 
+            // Turn left
+            if (targetPlayer.transform.position.x < transform.position.x) {
+                transform.rotation = Quaternion.Euler(0, 0, 0);
+            }
+
+            // Turn right
+            else if (targetPlayer.transform.position.x > transform.position.x) {
+                transform.rotation = Quaternion.Euler(0, 180f, 0);
+            }
+
+            if (Vector3.Distance(targetPlayer.transform.position, transform.position) > 2) {
+                animator.SetTrigger("attack2");
+
+                float damage = Random.Range(8.5f, 17.5f);
+                targetPlayer.GetComponent<PlayerController>().Hit(damage);
+
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("attack2")) {
+                    speed = __speed;
+                    currentState = (int) States.Idle;
+                    attackTimer = 0f;
+                }
+            }
+            else if (Vector3.Distance(targetPlayer.transform.position, transform.position) < 2) {
+                animator.SetTrigger("attack1");
+
+                float damage = Random.Range(2.5f, 6.5f);
+                targetPlayer.GetComponent<PlayerController>().Hit(damage);
+
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("attack1")) {
+                    speed = __speed;
+                    currentState = (int) States.Idle;
+                    attackTimer = 0f;
+                }
+            }
+        }
+        else {
+            currentState = (int) States.LookingForPlayer;
+            idleTimer = 0f;
+        }
+    }
+
+    /*private void Attack()
+    {
+        if (targetPlayer) {
+            speed = 0f;
+
+            // Turn left
+            if (targetPlayer.transform.position.x < transform.position.x) {
+                transform.rotation = Quaternion.Euler(0, 0f, 0);
+            }
+
+            // Turn right
+            else if (targetPlayer.transform.position.x > transform.position.x) {
+                transform.rotation = Quaternion.Euler(0, 180f, 0);
+            }
+
+            animator.SetTrigger("attack1");
+
+            float damage = Random.Range(2.5f, 6.5f);
+            targetPlayer.GetComponent<PlayerController>().Hit(damage);
+
+            if (!animator.GetCurrentAnimatorStateInfo(0).IsName("attack1")) {
+                speed = __speed;
+                currentState = (int) States.Idle;
+                attackTimer = 0f;
+            }
+        }
+        else {
+            currentState = (int) States.LookingForPlayer;
+            idleTimer = 0f;
+        }
+    }*/
+
+    private void ResetTimers()
+    {
+        idleTimer = 0f;
+        attackTimer = 0f;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -140,10 +298,21 @@ public class EnemyAI : MonoBehaviour
         {
             y = transform.position.y;
         }
+    }
 
-        else if (collision.gameObject.tag == "Player")
+    private void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.tag == "Player")
         {
-            HitPlayer(collision.gameObject.GetComponent<PlayerController>());
+            targetPlayer = collider.gameObject;
+        }
+    }
+    
+    private void OnTriggerExit2D(Collider2D collider)
+    {
+        if (collider.tag == "Player")
+        {
+            targetPlayer = null;
         }
     }
 }

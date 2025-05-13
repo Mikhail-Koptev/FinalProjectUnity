@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 436202661628763611}
   - component: {fileID: 3884872084274796916}
   - component: {fileID: 1027326983305154788}
+  - component: {fileID: 7156988749270129290}
   - component: {fileID: 4554788196040472912}
   - component: {fileID: 7205772573216236398}
   m_Layer: 0
@@ -144,6 +145,51 @@ CapsuleCollider2D:
   m_Offset: {x: 0.017721176, y: -0.12109482}
   m_Size: {x: 0.24661574, y: 0.5565786}
   m_Direction: 0
+--- !u!61 &7156988749270129290
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4861627516183796836}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.029366285, y: 0.042417765}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 2.5, y: 2.5}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.9322543, y: 1.1100016}
+  m_EdgeRadius: 0
 --- !u!50 &4554788196040472912
 Rigidbody2D:
   serializedVersion: 4
@@ -156,7 +202,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 1000
   m_LinearDrag: 0.5
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -183,5 +229,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcb0fcc6f411df143aef63f2aa4e443a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 20
+  health: 35
   speed: 7
+  idleDelay: 3.5
+  attackDelay: 4.5
+  walkingDelay: 2.5
