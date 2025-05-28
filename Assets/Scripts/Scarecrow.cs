@@ -6,11 +6,24 @@ public class Scarecrow : MonoBehaviour
 
     private bool isPlayerDamaged = false;
 
+    private Database database;
+
+    private void Start()
+    {
+        database = GameObject.Find("Database").GetComponent<Database>();
+
+        if (database.IsObjectDestroyed(gameObject)) {
+            Destroy(gameObject);
+        }
+    }
+
     public void Kill()
     {
         if (droppedItem) {
-            Instantiate(droppedItem, transform.position, Quaternion.identity);
+            GameObject obj = (GameObject) Instantiate(droppedItem, transform.position, Quaternion.identity);
+            obj.name = droppedItem.name;
         }
+        database.AddDestroyedObject(gameObject);
         Destroy(gameObject);
     }
 

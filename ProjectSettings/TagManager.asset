@@ -9,6 +9,9 @@ TagManager:
   - Scarecrow
   - Enemy
   - Grave
+  - Straw
+  - Item
+  - PreviousScene
   layers:
   - Default
   - TransparentFX

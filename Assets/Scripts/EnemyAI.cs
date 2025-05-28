@@ -7,28 +7,37 @@ public class EnemyAI : MonoBehaviour
         LookingForPlayer,
         WalkingToPlayer,
         WalkingFromPlayer,
-        Attack
+        Attack,
+        Stunned
     }
 
-    private int currentState;
+    [SerializeField] private int currentState;
 
-    private float idleTimer, attackTimer, walkingTimer;
+    private float idleTimer, attackTimer, walkingTimer, stunningTimer;
 
     private float y;
 
     [SerializeField] private float health;
     [SerializeField] private float speed;
+    [SerializeField] private float minDamage;
+    [SerializeField] private float maxDamage;
     [SerializeField] private float idleDelay;
     [SerializeField] private float attackDelay;
     [SerializeField] private float walkingDelay;
 
+    [SerializeField] private GameObject droppedItem;
+
+    private Database database;
+
     private float __speed;
+    private bool isStunned;
 
     private Animator animator;
 
     private GameObject targetPlayer;
+    private bool isTargetPlayerDead;
 
-    void Start()
+    private void Start()
     {
         __speed = speed;
 
@@ -37,15 +46,27 @@ public class EnemyAI : MonoBehaviour
         attackTimer = attackDelay;
 
         animator = GetComponent<Animator>();
+        database = GameObject.Find("Database").GetComponent<Database>();
+
+        if (database.IsObjectDestroyed(gameObject)) {
+            Destroy(gameObject);
+        }
     }
 
-    void Update()
+    private void Update()
     {
         idleTimer += Time.deltaTime;
         attackTimer += Time.deltaTime;
         walkingTimer += Time.deltaTime;
+        if (stunningTimer > 0) stunningTimer -= Time.deltaTime;
 
-        Debug.Log(attackTimer);
+        if (targetPlayer) {
+            isTargetPlayerDead = targetPlayer.GetComponent<PlayerController>()._isDead;
+        }
+
+        if (isTargetPlayerDead) {
+            currentState = (int) States.Idle;
+        }
 
         switch (currentState)
         {
@@ -105,21 +126,24 @@ public class EnemyAI : MonoBehaviour
                     direction.y = y + 1f;
 
                     if (targetPlayer.transform.position.x > transform.position.x) {
+                        transform.rotation = Quaternion.Euler(0, 180f, 0);
                         if (Vector3.Distance(targetPlayer.transform.position, transform.position) > 4) {
-                            transform.rotation = Quaternion.Euler(0, 180f, 0);
+                            animator.SetBool("idle", false);
                             transform.position += direction * speed * Time.deltaTime;
                         }
                         else {
+                            animator.SetBool("idle", true);
                             currentState = (int) States.Attack;
                             idleTimer = 0f;
                         }
                     }
                     else if (targetPlayer.transform.position.x < transform.position.x) {
+                        transform.rotation = Quaternion.Euler(0, 0, 0);
                         if (Vector3.Distance(targetPlayer.transform.position, transform.position) > 4) {
-                            transform.rotation = Quaternion.Euler(0, 0, 0);
                             transform.position += direction * speed * Time.deltaTime;
                         }
                         else {
+                            animator.SetBool("idle", true);
                             currentState = (int) States.Attack;
                             idleTimer = 0f;
                         }
@@ -127,6 +151,7 @@ public class EnemyAI : MonoBehaviour
                 }
                 else {
                     currentState = (int) States.LookingForPlayer;
+                    animator.SetBool("idle", true);
                     idleTimer = 0f;
                 }
                 break;
@@ -140,10 +165,12 @@ public class EnemyAI : MonoBehaviour
                         if (targetPlayer.transform.position.x > transform.position.x) {
                             if (Vector3.Distance(targetPlayer.transform.position, transform.position) < 5) {
                                 transform.rotation = Quaternion.Euler(0, 0, 0);
+                                animator.SetBool("idle", false);
                                 transform.position += direction * (speed-1f) * Time.deltaTime;
                             }
                             else {
                                 transform.rotation = Quaternion.Euler(0, 180f, 0);
+                                animator.SetBool("idle", true);
                                 currentState = (int) States.Idle;
                                 idleTimer = 0f;
                             }
@@ -151,25 +178,45 @@ public class EnemyAI : MonoBehaviour
                         else if (targetPlayer.transform.position.x < transform.position.x) {
                             if (Vector3.Distance(targetPlayer.transform.position, transform.position) < 5) {
                                 transform.rotation = Quaternion.Euler(0, 180f, 0);
+                                animator.SetBool("idle", false);
                                 transform.position += direction * (speed-1f) * Time.deltaTime;
                             }
                             else {
                                 transform.rotation = Quaternion.Euler(0, 0, 0);
+                                animator.SetBool("idle", true);
                                 currentState = (int) States.Idle;
                                 idleTimer = 0f;
                             }
                         }
                     }
                     else {
+                        animator.SetBool("idle", true);
                         currentState = (int) States.Attack;
                         walkingTimer = 0f;
                     }
+                }
+                else {
+                    currentState = (int) States.LookingForPlayer;
+                    animator.SetBool("idle", true);
+                    walkingTimer = 0f;
                 }
                 break;
             
             case (int) States.Attack:
                 if (attackTimer >= attackDelay) {
+                    animator.SetBool("idle", true);
                     Attack();
+                }
+                break;
+            
+            case (int) States.Stunned:
+                if (stunningTimer > 0) {
+                    speed = 0;
+                    currentState = (int) States.Stunned;
+                }
+                else {
+                    speed = __speed;
+                    currentState = (int) States.Idle;
                 }
                 break;
         }
@@ -178,8 +225,16 @@ public class EnemyAI : MonoBehaviour
             speed = __speed;
         }
 
-        if (health <= 0)
+        if (health <= 0) {
+            if (droppedItem) {
+                Instantiate(droppedItem, transform.position, Quaternion.identity);
+            }
+
+            if (database) {
+                database.AddDestroyedObject(gameObject);
+            }
             Destroy(gameObject);
+        }
     }
 
     private bool FindPlayer()
@@ -190,6 +245,7 @@ public class EnemyAI : MonoBehaviour
         {
             if (target.tag == "Player") {
                 targetPlayer = target.gameObject;
+                isTargetPlayerDead = targetPlayer.GetComponent<PlayerController>()._isDead;
                 return true;
             }
         }
@@ -201,14 +257,25 @@ public class EnemyAI : MonoBehaviour
     public void Hit(float hp, GameObject? player)
     {
         health -= hp;
-        if (player) targetPlayer = player;
+        if (player) {
+            targetPlayer = player;
+            isTargetPlayerDead = targetPlayer.GetComponent<PlayerController>()._isDead;
+        }
         currentState = (int) States.WalkingFromPlayer;
+        animator.SetBool("idle", false);
         idleTimer = 0f;
+    }
+
+    public void Stun(float time)
+    {
+        animator.SetBool("idle", true);
+        stunningTimer = time;
+        currentState = (int) States.Stunned;
     }
 
     private void Attack()
     {
-        if (targetPlayer) {
+        if (targetPlayer && !isTargetPlayerDead) {
             speed = 0f;
 
             // Turn left
@@ -221,10 +288,11 @@ public class EnemyAI : MonoBehaviour
                 transform.rotation = Quaternion.Euler(0, 180f, 0);
             }
 
+            // Long-range attack
             if (Vector3.Distance(targetPlayer.transform.position, transform.position) > 2) {
                 animator.SetTrigger("attack2");
 
-                float damage = Random.Range(8.5f, 17.5f);
+                float damage = Random.Range(minDamage, maxDamage);
                 targetPlayer.GetComponent<PlayerController>().Hit(damage);
 
                 if (!animator.GetCurrentAnimatorStateInfo(0).IsName("attack2")) {
@@ -233,10 +301,11 @@ public class EnemyAI : MonoBehaviour
                     attackTimer = 0f;
                 }
             }
+            // Close-range attack
             else if (Vector3.Distance(targetPlayer.transform.position, transform.position) < 2) {
                 animator.SetTrigger("attack1");
 
-                float damage = Random.Range(2.5f, 6.5f);
+                float damage = Random.Range(minDamage/1.5f, maxDamage/1.5f);
                 targetPlayer.GetComponent<PlayerController>().Hit(damage);
 
                 if (!animator.GetCurrentAnimatorStateInfo(0).IsName("attack1")) {
@@ -265,6 +334,7 @@ public class EnemyAI : MonoBehaviour
         if (collider.tag == "Player")
         {
             targetPlayer = collider.gameObject;
+            isTargetPlayerDead = targetPlayer.GetComponent<PlayerController>()._isDead;
         }
     }
     

@@ -329,6 +329,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98d96707eb2bbf348acc348523e1a9f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isWizard1Defeated: 0
 --- !u!4 &308102639
 Transform:
   m_ObjectHideFlags: 0
@@ -339,51 +340,6 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &487765047
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 487765049}
-  - component: {fileID: 487765048}
-  m_Layer: 0
-  m_Name: ForestController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &487765048
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 487765047}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7588db5d08f5da546b0cdbf238011940, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  endMenu: {fileID: 4857464860883449896}
---- !u!4 &487765049
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 487765047}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.51072186, y: 0.024974553, z: 109.82424}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8481,11 +8437,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 33ccca2dff18cd44cacf8619548deccb, type: 3}
---- !u!1 &4857464860883449896 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4175432582100064823, guid: 33ccca2dff18cd44cacf8619548deccb, type: 3}
-  m_PrefabInstance: {fileID: 4857464860883449895}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5854332027426358657
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8559,4 +8510,3 @@ SceneRoots:
   - {fileID: 46716145}
   - {fileID: 4857464860883449895}
   - {fileID: 308102639}
-  - {fileID: 487765049}

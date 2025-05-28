@@ -1,13 +1,18 @@
 using UnityEngine;
 
-public class Bread : MonoBehaviour
+public class Bread : Item
 {
-    private void OnCollisionEnter2D(Collision2D collision)
+    private PlayerController player;
+
+    protected override void Start()
     {
-        if (collision.gameObject.tag == "Player")
-        {
-            collision.gameObject.GetComponent<PlayerController>().Heal(10);
-            Destroy(gameObject);
-        }
+        base.Start();
+        player = GameObject.Find("HeroKnight").GetComponent<PlayerController>();
+    }
+
+    public override void Use()
+    {
+        player.Heal(10);
+        base.Use();
     }
 }

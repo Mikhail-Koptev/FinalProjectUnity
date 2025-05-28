@@ -19,7 +19,13 @@ public class PlayerAnimation : MonoBehaviour
         _animator.SetFloat("speed", _rb.velocity.magnitude);
 
         //attack
-        if (gameObject.GetComponent<PlayerController>()._isAttack)
+        if (gameObject.GetComponent<PlayerController>()._isAttack) {
             _animator.SetTrigger("attack");
+        }
+
+        //death
+        if (gameObject.GetComponent<PlayerController>()._isDead) {
+            _animator.SetTrigger("death");
+        }
     }
 }

@@ -4,6 +4,12 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuController : MonoBehaviour
 {
+    private void Start()
+    {
+        GameObject musicPlayer = GameObject.Find("MusicPlayer");
+        DontDestroyOnLoad(musicPlayer);
+    }
+
     public void Play()
     {
         SceneManager.LoadScene(1);

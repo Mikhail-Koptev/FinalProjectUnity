@@ -21,26 +21,29 @@ public class PlayerMove : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKey(KeyCode.RightArrow) && !_isDamaged)
+        if (!GetComponent<PlayerController>()._isDead)
         {
-            _movement.x = _speed;
-            transform.rotation = Quaternion.Euler(0, 0, 0);
-        }
-        else if (Input.GetKey(KeyCode.LeftArrow) && !_isDamaged)
-        {
-            _movement.x = -_speed;
-            transform.rotation = Quaternion.Euler(0, 180, 0);
-        }
-        else
-        {
-            _movement.x = 0;
-        }
+            if (Input.GetKey(KeyCode.RightArrow) && !_isDamaged)
+            {
+                _movement.x = _speed;
+                transform.rotation = Quaternion.Euler(0, 0, 0);
+            }
+            else if (Input.GetKey(KeyCode.LeftArrow) && !_isDamaged)
+            {
+                _movement.x = -_speed;
+                transform.rotation = Quaternion.Euler(0, 180, 0);
+            }
+            else
+            {
+                _movement.x = 0;
+            }
 
-        if (Input.GetKeyDown(KeyCode.UpArrow) && _isGround)
-        {
-            _isGround = false;
-            _movement.y = _jumpForce;
-            _rb.velocity = _movement;
+            if (Input.GetKeyDown(KeyCode.UpArrow) && _isGround)
+            {
+                _isGround = false;
+                _movement.y = _jumpForce;
+                _rb.velocity = _movement;
+            }
         }
         
         if (!_isGround)

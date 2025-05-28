@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
@@ -26,6 +27,17 @@ public class UIController : MonoBehaviour
         float percent = hp / 100;
 
         hpBar.sizeDelta = new Vector2(maxWidth * percent, hpBar.sizeDelta.y);
+    }
+
+    public void SetPoisoned(bool value)
+    {
+        if (value == true) {
+            hpBar.gameObject.GetComponent<Image>().color = new Color(0.4745098f, 0.7254902f, 0.05882353f);
+        }
+
+        else if (value == false) {
+            hpBar.gameObject.GetComponent<Image>().color = new Color(0.8867924f, 0, 0);
+        }
     }
 
     public void Continue()

@@ -10,8 +10,19 @@ public class SceneController : MonoBehaviour
     [SerializeField] private float cameraLeft;
     [SerializeField] private float cameraRight;
 
+    private Database database;
+
     private void Start()
     {
+        database = GameObject.Find("Database").GetComponent<Database>();
+
+        FadePanel.gameObject.SetActive(true);
+
+        if (database.IsPreviousScene() == true) {
+            GameObject.Find("HeroKnight").transform.position = GameObject.Find("ChangeScene").transform.position - new Vector3(2, 0, 0);
+            database.SetPreviousScene(false);
+        }
+
         StartCoroutine(FadeOut());
     }
 
@@ -26,7 +37,14 @@ public class SceneController : MonoBehaviour
 
     public void ChangeScene()
     {
-        StartCoroutine(FadeInAndChangeScene());
+        StartCoroutine(FadeIn());
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+
+    public void PreviousScene()
+    {
+        StartCoroutine(FadeIn());
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 
     private IEnumerator FadeIn()
@@ -38,19 +56,6 @@ public class SceneController : MonoBehaviour
 
             yield return new WaitForSeconds(0.01f);
         }
-    }
-
-    private IEnumerator FadeInAndChangeScene()
-    {
-        while (FadePanel.color.a < 1)
-        {
-            float a = FadePanel.color.a;
-            FadePanel.color = new Color(FadePanel.color.r, FadePanel.color.g, FadePanel.color.b, a += 0.01f);
-
-            yield return new WaitForSeconds(0.01f);
-        }
-
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     private IEnumerator FadeOut()
