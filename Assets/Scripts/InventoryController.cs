@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 
 public class InventoryController : MonoBehaviour
 {
@@ -18,7 +17,7 @@ public class InventoryController : MonoBehaviour
         var FetchedInventory = database.GetInventory();
         if (FetchedInventory != null) {
             foreach (var item in FetchedInventory) {
-                GameObject obj = (GameObject) AssetDatabase.LoadAssetAtPath($"Assets/Prefabs/Items/{item}.prefab", typeof(GameObject));
+                GameObject obj = (GameObject) Resources.Load($"Assets/Prefabs/Items/{item}.prefab", typeof(GameObject));
                 if (obj != null) {
                     AddItem(obj);
                 }
@@ -46,6 +45,14 @@ public class InventoryController : MonoBehaviour
             
             else if (items[index].TryGetComponent<StaleBread>(out StaleBread staleBread)) {
                 staleBread.Use();
+            }
+
+            else if (items[index].TryGetComponent<PoisonBottle>(out PoisonBottle poisonBottle)) {
+                poisonBottle.Use();
+            }
+
+            else if (items[index].TryGetComponent<CraniumBasher>(out CraniumBasher craniumBasher)) {
+                craniumBasher.Use();
             }
 
             itemsCount -= 1;
@@ -88,9 +95,7 @@ public class InventoryController : MonoBehaviour
             items.Add(obj);
             itemsCount += 1;
 
-            if (AssetDatabase.Contains(item) == false) {
-                Destroy(item);
-            }
+            Destroy(item);
         }
     }
 

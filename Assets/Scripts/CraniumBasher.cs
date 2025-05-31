@@ -1,20 +1,19 @@
 using UnityEngine;
 
-public class CraniumBasher : Artifact
+public class CraniumBasher : Item
 {
-    protected override void Update()
+    private void Start()
     {
-        base.Update();
-        if (isAttack && enemy != null) {
-            Use(enemy);
-        }
+        base.Start();
     }
 
-    public void Use(EnemyAI enemy)
+    public void Use()
     {
-        int number = Random.Range(1, 5);
-        if (number == 4) {
-            enemy.Stun(0.5f);
+        EndSceneController endSceneController = GameObject.Find("EndSceneController").GetComponent<EndSceneController>();
+        if (endSceneController) {
+            endSceneController.EndGame();
         }
+
+        base.Use();
     }
 }

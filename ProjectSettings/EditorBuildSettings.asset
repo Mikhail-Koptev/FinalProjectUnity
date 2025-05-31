@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Village.unity
     guid: 90d485a380a72b142a79744e6dc319f4
+  - enabled: 1
+    path: Assets/Scenes/Stones.unity
+    guid: 807338c3c0728aa479dc2861bbe9ea25
   m_configObjects: {}

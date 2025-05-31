@@ -12,6 +12,8 @@ TagManager:
   - Straw
   - Item
   - PreviousScene
+  - Logs
+  - Stone
   layers:
   - Default
   - TransparentFX

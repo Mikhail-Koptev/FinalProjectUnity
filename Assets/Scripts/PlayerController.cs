@@ -131,6 +131,16 @@ public class PlayerController : MonoBehaviour
             else if (target.tag == "Straw") {
                 target.GetComponent<Straw>().Kill();
             }
+
+            // Logs collision handler
+            else if (target.tag == "Logs") {
+                target.GetComponent<Logs>().Kill();
+            }
+
+            // Stone collision handler
+            else if (target.tag == "Stone") {
+                target.GetComponent<Stone>().Kill();
+            }
         }
     }
 
