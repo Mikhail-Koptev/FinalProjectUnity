@@ -11,15 +11,17 @@ public class InventoryController : MonoBehaviour
 
     private void Start()
     {
+        Resources.UnloadUnusedAssets();
+
         items = new List<GameObject>(maxItemsCount);
         database = GameObject.Find("Database").GetComponent<Database>();
 
         var FetchedInventory = database.GetInventory();
         if (FetchedInventory != null) {
             foreach (var item in FetchedInventory) {
-                GameObject obj = (GameObject) Resources.Load($"Assets/Prefabs/Items/{item}.prefab", typeof(GameObject));
+                GameObject obj = (GameObject) Resources.Load($"Prefabs/Items/{item}", typeof(GameObject));
                 if (obj != null) {
-                    AddItem(obj);
+                    AddItem(obj, true);
                 }
             }
         }
@@ -60,7 +62,7 @@ public class InventoryController : MonoBehaviour
         }
     }
 
-    public void AddItem(GameObject item)
+    public void AddItem(GameObject item, bool isAsset = false)
     {
         if (itemsCount < maxItemsCount) {
             GameObject obj;
@@ -95,7 +97,9 @@ public class InventoryController : MonoBehaviour
             items.Add(obj);
             itemsCount += 1;
 
-            Destroy(item);
+            if (isAsset == false) {
+                Destroy(item);
+            }
         }
     }
 

@@ -16,6 +16,14 @@ public class SceneController : MonoBehaviour
     {
         database = GameObject.Find("Database").GetComponent<Database>();
 
+        // Restart check
+        if (SceneManager.GetActiveScene().buildIndex == 1) {
+            if (database.IsRestart()) {
+                database.Restart();
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            }
+        }
+
         FadePanel.gameObject.SetActive(true);
 
         if (database.IsPreviousScene() == true) {

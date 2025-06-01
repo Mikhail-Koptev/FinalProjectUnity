@@ -5,6 +5,7 @@ public class Database : MonoBehaviour
 {
     private static Database instance;
 
+    private bool isRestart;
     private float health;
     private float poisonedTimer;
     private bool isPlayerDead;
@@ -30,6 +31,27 @@ public class Database : MonoBehaviour
             Database.instance.inventory = new List<string>();
         }
         DontDestroyOnLoad(gameObject);
+    }
+
+    public bool IsRestart()
+    {
+        return Database.instance.isRestart;
+    }
+
+    public void SetRestart(bool value)
+    {
+        Database.instance.isRestart = value;
+    }
+
+    public void Restart()
+    {
+        Database.instance.isRestart = false;
+        Database.instance.health = 100f;
+        Database.instance.poisonedTimer = 0f;
+        Database.instance.isPlayerDead = false;
+        Database.instance.previousScene = false;
+        Database.instance.inventory.Clear();
+        Database.instance.destroyedObjects.Clear();
     }
 
     public bool IsPreviousScene()
